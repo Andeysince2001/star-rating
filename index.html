@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/all.css">  
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <title>Star Rating</title>
+    <style>
+        .stars-outer{
+            position: relative;
+            display: inline-block;
+        }
+
+        .star-inner{
+            position: absolute;
+            top: 0;
+            left: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+        }
+        .stars-outer::before{
+            content: "\f005 \f005 \f005 \f005 \f005" ;  
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #ccc;
+        }
+        .star-inner::before{
+            content: "\f005 \f005 \f005 \f005 \f005" ;  
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            color: #f8ce0b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-group">
+            <select id="product-select" class="from-control">
+                <option value="0" disabled selected>Select Product</option>
+                <option value="sony">Sony 4K TV</option>
+                <option value="samsung">Samsung 4K TV</option>
+                <option value="vizio">Vizio 4K TV</option>
+                <option value="panasonic">panasonc 4K TV</option>
+                <option value="phillips">Phillips 4K TV</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="number" id="rating-control" class="form-control" step="0.1" max="5" placeholder="Rate 1 - 5" disabled>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>4K Television</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="sony">
+                    <td>Sony 4K TV</td>
+                    <td>
+                        <div class="stars-outer">
+                            <div class="star-inner"></div>
+                        </div>
+                        <span class="number-rating"></span>
+                    </td>
+                </tr>
+                <tr class="samsung">
+                    <td>Samsung 4K TV</td>
+                    <td>
+                        <div class="stars-outer">
+                            <div class="star-inner"></div>
+                        </div>
+                        <span class="number-rating"></span>
+                    </td>
+                </tr>
+                <tr class="vizio">
+                    <td>Vizio 4K TV</td>
+                    <td>
+                        <div class="stars-outer">
+                            <div class="star-inner"></div>
+                        </div>
+                        <span class="number-rating"></span>
+                    </td>
+                </tr>
+                <tr class="panasonic">
+                    <td>Panasonic 4K TV</td>
+                    <td>    
+                        <div class="stars-outer">
+                            <div class="star-inner"></div>
+                        </div>
+                        <span class="number-rating"></span>
+                    </td>
+                </tr>
+                <tr class="phillips">
+                    <td>Phillips 4K TV</td>
+                    <td>
+                        <div class="stars-outer">
+                            <div class="star-inner"></div>
+                        </div>
+                        <span class="number-rating"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
+    <script>
+        // initial ratings
+        const ratings = {
+            sony: 4.7,
+            samsung: 3.6,
+            vizio: 2.3,
+            panasonic: 2.6,
+            phillips: 4.1
+        }
+
+        // total stars
+        const starsTotal = 5;
+
+        //Run get ratings when Dom loads
+        document.addEventListener('DOMContentLoaded', getRatings);
+
+        // Form Elements
+        const productSelect = document.getElementById('product-select');
+        const ratingcontrol = document.getElementById('rating-control');
+
+        // init products
+        let product;
+
+        // product select change
+        productSelect.addEventListener('change', (e) => {
+            product = e.target.value;
+            // enable rating control
+            ratingcontrol.disabled = false;
+            ratingcontrol.value = ratings[product];
+        });
+
+        // rating control change
+        ratingcontrol.addEventListener('blur', (e) =>{
+            const rating = e.target.value;
+
+            // make sure 5 or under
+            if(rating > 5){
+                alert('please rate 1 - 5');
+            }
+
+            // change Ratings
+        ratings[product] = rating;
+         getRatings();
+        } );
+        
+
+        // Get Ratings 
+        function getRatings(){
+            for(let rating in ratings){
+                // get percentage
+                const starPercentage = (ratings[rating] / starsTotal) * 100;
+                
+                // round to nearest 10
+                const starPercentageRounded = `${Math.round(starPercentage / 10) * 10}%`;
+
+                // set width of stars-inner to percentage
+                document.querySelector(`.${rating} .star-inner`).style.width = starPercentageRounded;
+                
+                // Add Number Rating
+                document.querySelector(`.${rating} .number-rating`).innerHTML = ratings[rating];
+            }
+        }
+    </script>
+</body>
+</html>
